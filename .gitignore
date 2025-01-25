@@ -1,0 +1,6 @@
+**/__pycache__
+**/.env
+.idea
+.venv
+*.sqlite3
+**/logs
