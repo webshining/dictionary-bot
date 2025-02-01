@@ -7,22 +7,9 @@
 <link rel="stylesheet" href="{{ url_for('static', path='/styles/words/styles.css') }}" />
 {% endblock header_content%}
 {% block core_content%}
-<div class="dictionary__name">
-    {{dictionary.name}}
-    <span class="material-symbols-outlined">
-        edit
-    </span>
+<div class="dictionary__name" }>
 </div>
-{% for word in dictionary.words %}
-<div class="word__content" key={{word.id}}>
-    <div class="word__text">{{word.word}}<br>—<br>{{word.translate}}</div>
-    <div class="word__buttons">
-        <span class="material-symbols-outlined" onclick="delete_word({{dictionary.id}}, {{word.id}})">
-            delete
-        </span>
-    </div>
-</div>
-{%endfor%}
 {% endblock core_content%}
 {% block footer_content%}
+<script src="{{url_for('static', path='/scripts/words/scripts.js')}}"></script>
 {% endblock footer_content%}

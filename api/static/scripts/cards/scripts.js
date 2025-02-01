@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const card = document.querySelector(".card");
     const cardFront = document.querySelector(".card__front");
     const cardBack = document.querySelector(".card__back");
