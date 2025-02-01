@@ -1,19 +1,13 @@
 from aiogram.types import KeyboardButton, WebAppInfo
 
+from app.keyboards.base import BaseReplyKeyboard
 from loader import _
-from .base import BaseReplyKeyboard
 
 
-class MenuKeyboardClass(BaseReplyKeyboard):
-    def keyboard(self):
-        builder = self.builder()
-
-        buttons = [
-            KeyboardButton(text=_("Open dictionary"),
-                           web_app=WebAppInfo(url="https://calm-composed-gobbler.ngrok-free.app/cards"))]
-        builder.add(*buttons)
-
-        return builder.as_markup(resize_keyboard=True)
-
-
-MenuKeyboard = MenuKeyboardClass()
+class MenuKeyboard(BaseReplyKeyboard):
+    @classmethod
+    def buttons(cls):
+        return [
+            KeyboardButton(text=_("Add word")),
+            KeyboardButton(text=_("Dictionaries")),
+        ]

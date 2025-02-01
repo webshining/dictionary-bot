@@ -1,1 +1,2 @@
-from .auth import AuthSchema
+from .dictionary import DictionaryResponse
+from .word import WordRequest, WordResponse

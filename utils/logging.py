@@ -8,7 +8,9 @@ from data.config import DIR
 
 logger.remove()
 logger.add(
-    sys.stdout, level="DEBUG", filter=lambda record: record["level"].name in ["DEBUG", "INFO"]
+    sys.stdout,
+    level="DEBUG",
+    filter=lambda record: record["level"].name in ["DEBUG", "INFO"],
 )
 logger.add(sys.stderr, level="WARNING")
 

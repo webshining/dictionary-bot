@@ -1,30 +1,11 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    user-select: none;
-}
-html,
 body {
-    width: 100vw;
-    height: 100vh;
-
     font-size: 26px;
     font-family: "Exo 2", serif;
     font-weight: 500;
-
-    overflow: hidden;
 }
 
 .content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
 }
 
 .variants {
@@ -35,10 +16,12 @@ body {
     justify-content: center;
     align-items: center;
 }
+
 .variants__no,
 .variants__yes {
     position: absolute;
     opacity: 0;
+    transition: all 0.3s ease;
 }
 
 .card {
@@ -53,9 +36,15 @@ body {
     perspective: 1000px;
     border-radius: 10px;
     will-change: transform;
+    transition: all 0.3s ease;
 }
+
 .card.active .card__front {
     transform: rotateX(45deg);
+}
+
+.card.active .card__back {
+    opacity: 1;
 }
 
 .card__front,
@@ -69,6 +58,7 @@ body {
 
     border-radius: 10px;
     backface-visibility: hidden;
+    transition: all 0.3s ease;
 }
 
 .card__front {
@@ -80,15 +70,16 @@ body {
 
     cursor: pointer;
     transform-origin: top;
-    transition: all 0.3s ease;
-    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.5);
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
     will-change: transform, background-color, color;
+    background: var(--tg-theme-secondary-bg-color);
 }
 
 .card__back {
     align-items: flex-end;
 
     will-change: color;
+    opacity: 0;
 }
 
 .card__back span {
@@ -97,6 +88,14 @@ body {
     display: flex;
     justify-content: center;
 
-    background: rgba(84, 82, 204, 0.15);
+    background: var(--tg-theme-secondary-bg-color);
     border-radius: 10px;
+}
+
+.dragging_on {
+    transition: none;
+}
+
+.dragging_end {
+    transition: all 0.3s ease;
 }

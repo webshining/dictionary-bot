@@ -16,4 +16,4 @@ async def setup_middlewares(dp: Dispatcher):
         await middleware(admin_router.inline_query)
 
 
-__all__ = ['setup_middlewares']
+__all__ = ["setup_middlewares"]

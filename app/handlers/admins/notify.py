@@ -21,7 +21,9 @@ async def _notify(message: Message, state: FSMContext):
 
 @router.message(NotifyState.text)
 async def _notify_to_message(message: Message, state: FSMContext):
-    await message.copy_to(chat_id=message.chat.id, reply_markup=ApplyKeyboard.keyboard("notify"))
+    await message.copy_to(
+        chat_id=message.chat.id, reply_markup=ApplyKeyboard.keyboard("notify")
+    )
     await message.delete()
     await state.set_state(None)
 

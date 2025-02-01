@@ -1,0 +1,28 @@
+{% extends 'core.html' %}
+{% block header_content%}
+<link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="{{ url_for('static', path='/styles/words/styles.css') }}" />
+{% endblock header_content%}
+{% block core_content%}
+<div class="dictionary__name">
+    {{dictionary.name}}
+    <span class="material-symbols-outlined">
+        edit
+    </span>
+</div>
+{% for word in dictionary.words %}
+<div class="word__content" key={{word.id}}>
+    <div class="word__text">{{word.word}}<br>—<br>{{word.translate}}</div>
+    <div class="word__buttons">
+        <span class="material-symbols-outlined" onclick="delete_word({{dictionary.id}}, {{word.id}})">
+            delete
+        </span>
+    </div>
+</div>
+{%endfor%}
+{% endblock core_content%}
+{% block footer_content%}
+{% endblock footer_content%}

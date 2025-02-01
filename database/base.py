@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 
-from sqlalchemy import and_, select, DateTime
+from sqlalchemy import DateTime, and_, select
 from sqlalchemy.ext.asyncio import AsyncAttrs, AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -17,14 +17,16 @@ async def get_session():
         yield session
 
 
+async def get_session_depends():
+    async with async_session() as session:
+        yield session
+
+
 def execute(func):
     async def wrapper(*args, **kwargs):
         if not "session" in kwargs:
             async with get_session() as session:
                 kwargs["session"] = session
-                return await func(*args, **kwargs)
-        if not kwargs['session'].in_transaction():
-            async with kwargs['session'].begin():
                 return await func(*args, **kwargs)
 
         return await func(*args, **kwargs)
@@ -40,8 +42,11 @@ class BaseModel(Base):
     __abstract__ = True
 
     created_on: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_on: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc),
-                                                 onupdate=lambda: datetime.now(timezone.utc))
+    updated_on: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
 
     @classmethod
     async def get(cls, id: int, session: AsyncSession = None):
@@ -69,6 +74,7 @@ class BaseModel(Base):
         obj = cls(**kwargs)
         session.add(obj)
         await session.flush()
+        await session.commit()
         return obj
 
     @classmethod
@@ -78,7 +84,24 @@ class BaseModel(Base):
             for key, value in kwargs.items():
                 setattr(obj, key, value)
             await session.flush()
+            await session.commit()
         return obj
+
+    @classmethod
+    @execute
+    async def delete(cls, id: int, session: AsyncSession = None):
+        if obj := await cls.get(id, session=session):
+            await session.delete(obj)
+            await session.flush()
+            await session.commit()
+
+    @classmethod
+    @execute
+    async def delete_by(cls, session: AsyncSession = None, **kwargs):
+        if obj := await cls.get_by(session=session, **kwargs):
+            await session.delete(obj)
+            await session.flush()
+            await session.commit()
 
     @classmethod
     @execute
@@ -93,6 +116,3 @@ class BaseModel(Base):
         if user := await cls.update(id=id, session=session, **kwargs):
             return user
         return await cls.create(id=id, session=session, **kwargs)
-
-    def to_dict(self):
-        return {c.key: getattr(self, c.key) for c in self.__table__.columns}

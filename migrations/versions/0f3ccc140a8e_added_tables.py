@@ -1,8 +1,8 @@
 """Added tables
 
-Revision ID: fca50e3b45b9
+Revision ID: 0f3ccc140a8e
 Revises: 
-Create Date: 2025-01-22 19:00:27.346234
+Create Date: 2025-01-31 21:24:49.345951
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'fca50e3b45b9'
+revision: str = '0f3ccc140a8e'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -36,15 +36,19 @@ def upgrade() -> None:
     sa.Column('user_id', sa.BigInteger(), nullable=False),
     sa.Column('created_on', sa.DateTime(), nullable=False),
     sa.Column('updated_on', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('words',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('word', sa.String(), nullable=False),
+    sa.Column('translate', sa.String(), nullable=False),
+    sa.Column('dictionary_id', sa.Integer(), nullable=False),
+    sa.Column('known_count', sa.Integer(), nullable=False),
+    sa.Column('unknown_count', sa.Integer(), nullable=False),
     sa.Column('created_on', sa.DateTime(), nullable=False),
     sa.Column('updated_on', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['dictionaries.id'], ),
+    sa.ForeignKeyConstraint(['dictionary_id'], ['dictionaries.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

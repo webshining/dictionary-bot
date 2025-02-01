@@ -1,21 +1,14 @@
 from aiogram.filters.callback_data import CallbackData
+from aiogram.types import InlineKeyboardButton
 
 from loader import i18n
 from .base import BaseInlineKeyboard
 
 
-class LangKeyboard(BaseInlineKeyboard):
-    def keyboard(self):
-        builder = self.builder()
+class LangKeyboard(BaseInlineKeyboard, CallbackData, prefix="lang"):
+    lang: str
 
-        for lang in i18n.available_locales:
-            builder.button(text=lang.upper(), callback_data=self._get_data(lang=lang))
-        builder.adjust(3)
-
-        return builder.as_markup()
-
-    class Callback(CallbackData, prefix="lang"):
-        lang: str
-
-
-LangKeyboard = LangKeyboard()
+    @staticmethod
+    def buttons():
+        return [InlineKeyboardButton(text=lang.upper(), callback_data=LangKeyboard(lang=lang).pack()) for lang in
+                i18n.available_locales]

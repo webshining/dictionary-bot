@@ -1,8 +1,8 @@
 from sqlalchemy import BigInteger, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .dictionary import Dictionary
 from ..base import BaseModel
+from .dictionary import Dictionary
 
 
 class User(BaseModel):
@@ -13,4 +13,7 @@ class User(BaseModel):
     username: Mapped[str] = mapped_column(String, nullable=True)
     status: Mapped[str] = mapped_column(String, default="user")
     lang: Mapped[str] = mapped_column(String, default="en")
-    dictionaries: Mapped[list["Dictionary"]] = relationship(lazy="select")
+    dictionaries: Mapped[list["Dictionary"]] = relationship(lazy="select", cascade="all, delete-orphan")
+
+    async def get_dictionaries(self) -> list[Dictionary]:
+        return await self.awaitable_attrs.dictionaries
