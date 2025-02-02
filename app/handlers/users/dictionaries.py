@@ -35,7 +35,7 @@ async def _dictionaries_dictionary(
     elif callback_data.action == "refresh":
         text, markup = await _get_dictionaries_data(user, callback_data.data)
         try:
-            await call.message.edit_text(text, reply_markup=markup)
+            await call.message.edit_reply_markup(reply_markup=markup)
         except:
             pass
     elif callback_data.data == "dictionaries":

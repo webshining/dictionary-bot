@@ -30,9 +30,9 @@ services:
             retries: 5
         restart: unless-stopped
         environment:
-            POSTGRES_DB: database
-            POSTGRES_USER: webshining
-            POSTGRES_PASSWORD: admin
+            POSTGRES_DB: ${DB_NAME:-database}
+            POSTGRES_USER: ${DB_USER:-admin}
+            POSTGRES_PASSWORD: ${DB_USER:-admin}
         volumes:
             - postgres_data:/var/lib/postgresql/data/
 

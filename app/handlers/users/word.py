@@ -2,7 +2,8 @@ from aiogram import F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from deep_translator import LingueeTranslator
+from deep_translator import GoogleTranslator, LingueeTranslator
+from textblob import TextBlob
 
 from app.keyboards import MenuKeyboard
 from app.states import WordState
@@ -24,8 +25,19 @@ async def _word(message: Message, state: FSMContext):
 
 @router.message(WordState.add, F.text)
 async def _word_add_with_translate(message: Message, user: User, state: FSMContext):
-    translate = LingueeTranslator(source="auto", target="ru").translate(message.text)
-    await state.update_data(word=f"{message.text}-{translate}")
+    word = str(TextBlob(message.text).correct())
+    try:
+        translates = LingueeTranslator(source="english", target="russian").translate(word, return_all=True)[:4]
+    except:
+        pass
+    translates = [GoogleTranslator(source="english", target="ru").translate(word)]
+
+    await state.update_data(word=f"{message.text}-{translates[0]}")
     await state.set_state(None)
-    text, markup = await _get_dictionaries_data(user, "word")
+
+    text = f"<blockquote>{word}</blockquote>"
+    for translate in translates:
+        text += f"\n- <i>{translate}</i>"
+
+    markup = (await _get_dictionaries_data(user, "word"))[1]
     await message.answer(text, reply_markup=markup)
