@@ -11,5 +11,5 @@ class Word(BaseModel):
     word: Mapped[str] = mapped_column(String, nullable=False)
     translate: Mapped[str] = mapped_column(String, nullable=False)
     dictionary_id: Mapped[int] = mapped_column(ForeignKey("dictionaries.id", ondelete="CASCADE"))
-    known_count: Mapped[int] = mapped_column(Integer, default=0)
-    unknown_count: Mapped[int] = mapped_column(Integer, default=0)
+    known_count: Mapped[int] = mapped_column(Integer, server_default="0", default=0)
+    unknown_count: Mapped[int] = mapped_column(Integer, server_default="0", default=0)

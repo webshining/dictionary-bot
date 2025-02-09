@@ -52,13 +52,13 @@ const onClick = (card) => {
 const onChange = async (card, cardFront, cardBack, know = null) => {
     const word_id = card.getAttribute("data-id");
     if (word_id) {
-        await process_word(word_id, know);
-        window.words = window.words.filter((word) => word.id != word_id);
+        await auth_axios.put(`/words/${dictionary.id}/${word_id}`, { know });
+        window.dictionary.words = window.dictionary.words.filter((word) => word.id != word_id);
     }
-    if (window.words.length > 0) {
-        card.setAttribute("data-id", window.words[0].id);
-        cardFront.innerHTML = `${window.words[0].word}`;
-        cardBack.innerHTML = `<span>${window.words[0].translate}</span>`;
+    if (window.dictionary.words.length > 0) {
+        card.setAttribute("data-id", window.dictionary.words[0].id);
+        cardFront.innerHTML = `${window.dictionary.words[0].word}`;
+        cardBack.innerHTML = `<span>${window.dictionary.words[0].translate}</span>`;
     } else {
         card.removeAttribute("data-id");
         cardFront.innerHTML = `That's all`;

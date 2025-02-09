@@ -9,13 +9,13 @@ DIR = Path(__file__).absolute().parent.parent
 
 TELEGRAM_BOT_TOKEN = env.str("TELEGRAM_BOT_TOKEN")
 
-RD_DB = env.int("RD_DB", None)
-RD_HOST = env.str("RD_HOST", None)
-RD_PORT = env.int("RD_PORT", None)
+RD_DB = env.int("RD_DB", 0)
+RD_HOST = env.str("RD_HOST", "localhost")
+RD_PORT = env.int("RD_PORT", 6379)
 RD_USER = env.str("RD_USER", None)
 RD_PASS = env.str("RD_PASS", None)
 
-RD_URI = env.str("RD_URI", default=None)
+RD_URI = env.str("RD_URI", default=f"redis://{RD_HOST}:{RD_PORT}/{RD_DB}")
 if RD_DB and RD_HOST and RD_PORT:
     RD_URI = f"redis://{RD_HOST}:{RD_PORT}/{RD_DB}"
     if RD_USER and RD_PASS:

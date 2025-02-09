@@ -1,2 +1,3 @@
+from .auth import AuthRequest
 from .dictionary import DictionaryRequest, DictionaryResponse
-from .word import WordRequest, WordResponse
+from .word import WordProcessRequest, WordRequest, WordResponse

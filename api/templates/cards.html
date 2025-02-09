@@ -3,9 +3,6 @@
     rel="stylesheet" />
 <link rel="stylesheet" href="{{ url_for('static', path='/styles/cards/styles.css') }}" />
 {% endblock header_content%} {% block core_content%}
-<script>
-    window.words = {{ words | tojson }}
-</script>
 <div class="variants">
     <div class="variants__no">Don't know</div>
     <div class="variants__yes">Know</div>
@@ -17,4 +14,7 @@
 {% endblock core_content%} {% block footer_content%}
 <script src="{{ url_for('static', path='/scripts/cards/card.js') }}"></script>
 <script src="{{ url_for('static', path='/scripts/cards/scripts.js') }}"></script>
+<script>
+    window.dictionary = {{ dictionary | tojson }}
+</script>
 {% endblock footer_content%}

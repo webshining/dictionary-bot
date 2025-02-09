@@ -7,20 +7,24 @@ services:
                 condition: service_healthy
         environment:
             TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-            DB_NAME: ${DB_NAME:-database}
-            DB_USER: ${DB_USER:-webshining}
-            DB_PASS: ${DB_PASS:-admin}
-            DB_HOST: ${DB_HOST:-db}
-            DB_PORT: ${DB_PORT:-5432}
             RD_DB: ${RD_DB:-5}
             RD_HOST: ${RD_HOST:-redis}
             RD_PORT: ${RD_PORT:-6379}
             RD_PASS: ${RD_PASS:-admin}
             RD_USER: ${RD_USER:-admin}
+            DB_NAME: ${DB_NAME:-database}
+            DB_USER: ${DB_USER:-admin}
+            DB_PASS: ${DB_PASS:-admin}
+            DB_HOST: ${DB_HOST:-db}
+            DB_PORT: ${DB_PORT:-5432}
         entrypoint:
             - ./bin/entrypoint.sh
         volumes:
             - ./logs:/app/logs
+        networks:
+            - app_network
+            - storage_network
+            - services
     db:
         image: postgres:alpine
         healthcheck:
@@ -35,10 +39,17 @@ services:
             POSTGRES_PASSWORD: ${DB_USER:-admin}
         volumes:
             - postgres_data:/var/lib/postgresql/data/
+        networks:
+            - app_network
+        ports:
+            - "5432:5432"
 
 volumes:
     postgres_data:
 
 networks:
+    app_network:
     storage_network:
+        external: true
+    services:
         external: true

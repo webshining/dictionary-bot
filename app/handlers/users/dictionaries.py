@@ -27,13 +27,14 @@ async def _dictionaries_dictionary(
     await call.answer()
     if callback_data.action == "create":
         if callback_data.data == "word":
+            print("A")
             await call.message.edit_text(_("Enter dictionary name:"), reply_markup=None)
             await state.set_state(WordState.dictionary_create)
             return
         await call.message.answer(_("Enter dictionary name:"))
         await state.set_state(DictionariesState.create)
     elif callback_data.action == "refresh":
-        text, markup = await _get_dictionaries_data(user, callback_data.data)
+        markup = (await _get_dictionaries_data(user, callback_data.data))[1]
         try:
             await call.message.edit_reply_markup(reply_markup=markup)
         except:

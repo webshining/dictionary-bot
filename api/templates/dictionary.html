@@ -1,0 +1,35 @@
+{% extends 'core.html' %}
+{% block header_content%}
+<link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="{{ url_for('static', path='/styles/dictionary/styles.css') }}" />
+{% endblock header_content%}
+{% block core_content%}
+<div class="dictionary__content">
+    <input class="dictionary__content_input" value={{dictionary.name}}
+        oninput="update_dictionary({{dictionary.id}}, event.target.value)" />
+</div>
+<div class="words__content">
+    {% for word in dictionary.words %}
+    <div class="word__content" key="${element.id}">
+        <div class="word__text">
+            {{word.word}}<br>{{word.translate}}
+        </div>
+        <div class="word__buttons">
+            <span class="material-symbols-outlined" onclick="delete_word({{dictionary.id}}, {{word.id}})">
+                delete
+            </span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div class="create__content">
+    <input type="text" class="create__content_input" placeholder="Word" />
+    <div class="create__content_button" onclick="add_word({{dictionary.id}})">Add</div>
+</div>
+{% endblock core_content%}
+{% block footer_content%}
+<script src="{{url_for('static', path='/scripts/dictionary/scripts.js')}}"></script>
+{% endblock footer_content%}

@@ -1,7 +1,9 @@
 import asyncio
 
-from app import setup_routes, setup_middlewares
-from loader import dp, bot
+from aiogram.methods import DeleteWebhook
+
+from app import setup_middlewares, setup_routes
+from loader import bot, dp
 from utils import logger
 
 
@@ -19,6 +21,7 @@ async def main() -> None:
     await setup_routes(dp)
     dp.startup.register(on_startup)
     dp.shutdown.register(on_shutdown)
+    await bot(DeleteWebhook(drop_pending_updates=True))
     await dp.start_polling(bot)
 
 
