@@ -43,6 +43,16 @@ services:
             - app_network
         ports:
             - "5432:5432"
+    pgadmin:
+        image: dpage/pgadmin4
+        restart: unless-stopped
+        environment:
+            PGADMIN_DEFAULT_EMAIL: "webshining@protonmail.com"
+            PGADMIN_DEFAULT_PASSWORD: "admin"
+        ports:
+            - "54321:80"
+        networks:
+            - app_network
 
 volumes:
     postgres_data:

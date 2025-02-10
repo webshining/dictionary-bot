@@ -1,10 +1,10 @@
-from deep_translator import GoogleTranslator
 from fastapi import APIRouter, Depends, HTTPException
 
 from api.schemas import WordProcessRequest, WordRequest, WordResponse
 from api.services import get_current_user
 from database import AsyncSession, get_session_depends
 from database.models import Dictionary, Word
+from utils import translate_word
 
 router = APIRouter()
 
@@ -56,6 +56,6 @@ async def _word_create(
     if not dictionary:
         raise HTTPException(status_code=404, detail="Dictionary not found")
 
-    translate = GoogleTranslator(source="auto", target="ru").translate(body.word)
+    translate = (await translate_word(body.word))[0][0]
     word = await Word.create(dictionary_id=dictionary_id, **body.model_dump(), translate=translate, session=session)
     return WordResponse.model_validate(word).model_dump()
