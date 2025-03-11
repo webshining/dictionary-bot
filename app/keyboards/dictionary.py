@@ -14,11 +14,11 @@ class DictionaryKeyboard(BaseInlineKeyboard, CallbackData, prefix="dictionary"):
     def buttons(id: int):
         return [
             InlineKeyboardButton(
-                text=_("Cards"), web_app=WebAppInfo(url=f"https://calm-composed-gobbler.ngrok-free.app/cards/{id}/init")
+                text=_("Cards"), web_app=WebAppInfo(url=f"https://dictionary.webshining.space/cards/{id}/init")
             ),
             InlineKeyboardButton(
                 text=_("View"),
-                web_app=WebAppInfo(url=f"https://calm-composed-gobbler.ngrok-free.app/dictionaries/{id}/init"),
+                web_app=WebAppInfo(url=f"https://dictionary.webshining.space/dictionaries/{id}/init"),
             ),
             InlineKeyboardButton(text=_("Delete"), callback_data=DictionaryKeyboard(id=id, action="delete").pack()),
         ]

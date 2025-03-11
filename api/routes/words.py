@@ -56,6 +56,8 @@ async def _word_create(
     if not dictionary:
         raise HTTPException(status_code=404, detail="Dictionary not found")
 
-    translate = (await translate_word(body.word))[0][0]
-    word = await Word.create(dictionary_id=dictionary_id, **body.model_dump(), translate=translate, session=session)
+    translate = await translate_word(body.word)
+    word = await Word.create(
+        dictionary_id=dictionary_id, **body.model_dump(), translate=translate.translations[0], session=session
+    )
     return WordResponse.model_validate(word).model_dump()
