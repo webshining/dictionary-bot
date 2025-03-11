@@ -27,8 +27,8 @@ async def _dictionaries_dictionary(
     await call.answer()
     if callback_data.action == "create":
         if callback_data.data == "word":
-            print("A")
-            await call.message.edit_text(_("Enter dictionary name:"), reply_markup=None)
+            await call.message.edit_reply_markup(reply_markup=None)
+            await call.message.answer(_("Enter dictionary name:"))
             await state.set_state(WordState.dictionary_create)
             return
         await call.message.answer(_("Enter dictionary name:"))
@@ -49,7 +49,8 @@ async def _dictionaries_dictionary(
         word = [w.strip() for w in data.get("word").split("-") if w.strip()]
         await Word.create(dictionary_id=callback_data.id, word=word[0], translate=word[1], session=session)
 
-        await call.message.edit_text(text=_("Word successfully added"), reply_markup=None)
+        await call.answer(_("Word successfully added"))
+        await call.message.edit_reply_markup(reply_markup=None)
 
 
 @router.callback_query(DictionaryKeyboard.filter())

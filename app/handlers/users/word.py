@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import BufferedInputFile, Message
 
 from app.keyboards import MenuKeyboard
+from app.states import WordState
 from database.models import User
 from loader import _
 from utils import translate_word
@@ -16,11 +17,12 @@ data = "word"
 
 @router.message(MenuKeyboard("Add word"))
 @router.message(Command("add_word"))
-async def _word(message: Message):
+async def _word(message: Message, state: FSMContext):
     await message.answer(_("Enter word:"))
+    await state.set_state(WordState.add)
 
 
-@router.message(F.text)
+@router.message(WordState.add, F.text)
 async def _word_add_with_translate(message: Message, user: User, state: FSMContext):
     word = message.text
     translation = await translate_word(word)
@@ -43,3 +45,4 @@ async def _word_add_with_translate(message: Message, user: User, state: FSMConte
     markup = (await _get_dictionaries_data(user, "word"))[1]
 
     await message.answer_voice(caption=text, reply_markup=markup, voice=BufferedInputFile(voice, filename="voice.ogg"))
+    await state.set_state(None)
