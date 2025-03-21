@@ -55,7 +55,6 @@ async def _word_create(
     dictionary = await Dictionary.get_by(id=dictionary_id, user_id=user_id, session=session)
     if not dictionary:
         raise HTTPException(status_code=404, detail="Dictionary not found")
-
     translate = await translate_word(body.word)
     word = await Word.create(
         dictionary_id=dictionary_id, **body.model_dump(), translate=translate.translations[0], session=session

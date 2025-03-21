@@ -1,0 +1,23 @@
+[project]
+name = "dictionary-bot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11.9"
+dependencies = [
+    "aiogram>=3.19.0",
+    "aiosqlite>=0.21.0",
+    "alembic>=1.15.1",
+    "asyncpg>=0.30.0",
+    "babel>=2.17.0",
+    "edge-tts>=7.0.0",
+    "environs>=14.1.1",
+    "fake-useragent>=2.1.0",
+    "fastapi[standard,standart]>=0.115.11",
+    "google-cloud-translate>=3.20.2",
+    "googletrans>=4.0.2",
+    "loguru>=0.7.3",
+    "pytz>=2025.1",
+    "redis>=5.2.1",
+    "sqlalchemy[asyncio]>=2.0.39",
+]

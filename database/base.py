@@ -7,7 +7,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from data.config import DB_URI
 
-async_engine = create_async_engine(DB_URI, echo=False, pool_size=20, max_overflow=5, future=True)
+async_engine = create_async_engine(DB_URI, echo=False)
 async_session = async_sessionmaker(async_engine, class_=AsyncSession, expire_on_commit=False)
 
 

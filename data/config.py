@@ -9,6 +9,8 @@ DIR = Path(__file__).absolute().parent.parent
 
 TELEGRAM_BOT_TOKEN = env.str("TELEGRAM_BOT_TOKEN")
 
+WEB_APP_URL = env.str("WEB_APP_URL")
+
 RD_DB = env.int("RD_DB", 0)
 RD_HOST = env.str("RD_HOST", "localhost")
 RD_PORT = env.int("RD_PORT", 6379)

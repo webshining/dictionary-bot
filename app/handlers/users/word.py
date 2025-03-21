@@ -25,7 +25,7 @@ async def _word(message: Message, state: FSMContext):
 @router.message(WordState.add, F.text)
 async def _word_add_with_translate(message: Message, user: User, state: FSMContext):
     word = message.text
-    translation = await translate_word(word)
+    translation = await translate_word(word, voice=True)
     translations = translation.translations
     examples = translation.examples
     expressions = translation.expressions
