@@ -2,6 +2,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap"
     rel="stylesheet" />
 <link rel="stylesheet" href="{{ url_for('static', path='/styles/cards/styles.css') }}" />
+<script>
+    window.dictionary = JSON.parse('{{ dictionary.model_dump_json() | safe }}')
+</script>
 {% endblock header_content%} {% block core_content%}
 <div class="variants">
     <div class="variants__no">Don't know</div>
@@ -14,7 +17,4 @@
 {% endblock core_content%} {% block footer_content%}
 <script src="{{ url_for('static', path='/scripts/cards/card.js') }}"></script>
 <script src="{{ url_for('static', path='/scripts/cards/scripts.js') }}"></script>
-<script>
-    window.dictionary = {{ dictionary | tojson }}
-</script>
 {% endblock footer_content%}

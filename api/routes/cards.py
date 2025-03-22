@@ -49,5 +49,5 @@ async def _card_page(request: Request, dictionary_id: int, session: AsyncSession
     return templates.TemplateResponse(
         name="cards.html",
         request=request,
-        context={"dictionary": DictionaryResponse.model_validate(dictionary).model_dump()},
+        context={"dictionary": DictionaryResponse.model_validate(dictionary)},
     )
