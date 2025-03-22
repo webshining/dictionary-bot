@@ -1,11 +1,18 @@
 from io import BytesIO
 
-import aiohttp
+import aiosqlite
+import nltk
 from edge_tts import Communicate
-from fake_useragent import UserAgent
+from googletrans import Translator
+from nltk import pos_tag
+from nltk.tokenize import word_tokenize
 from pydantic import BaseModel
 
-ua = UserAgent()
+from data.config import DIR
+
+nltk.download("punkt_tab")
+nltk.download("universal_tagset")
+nltk.download("averaged_perceptron_tagger_eng")
 
 
 class ExpressionModel(BaseModel):
@@ -14,7 +21,7 @@ class ExpressionModel(BaseModel):
 
 
 class ExampleModel(BaseModel):
-    position: str
+    position: str = None
     example: str
 
 
@@ -23,21 +30,6 @@ class Translation(BaseModel):
     translations: list[str] = []
     examples: list[ExampleModel] = []
     expressions: list[ExpressionModel] = []
-
-
-def get_expressions(data: list):
-    for d in data:
-        yield ExpressionModel(expression=d["expression"], definition=d["def"])
-
-
-def get_examples(data: list):
-    for d in data:
-        if d["Defs"]:
-            if d["Defs"][0]["examples"]:
-                yield ExampleModel(position=d["Pos"], example=d["Defs"][0]["examples"][0]["example"])
-
-
-from googletrans import Translator
 
 
 async def translate_word(word: str, target: str = "ru", voice: bool = False) -> Translation:
@@ -56,4 +48,25 @@ async def translate_word(word: str, target: str = "ru", voice: bool = False) -> 
             bytes_voice.seek(0)
             bytes_voice = bytes_voice.getvalue()
 
-        return Translation(voice=bytes_voice, translations=[translate.text], examples=[], expressions=[])
+        examples = await get_examples(word)
+        return Translation(voice=bytes_voice, translations=[translate.text], examples=examples, expressions=[])
+
+
+async def get_examples(word: str) -> list[ExampleModel]:
+    examples = []
+    query_word = f'"{word.strip()}"'
+    async with aiosqlite.connect(DIR.joinpath("sentences.sqlite3")) as db:
+        async with db.execute("SELECT content FROM sentences WHERE content MATCH ? LIMIT 20", (query_word,)) as cursor:
+            async for row in cursor:
+                tokens = word_tokenize(row[0])
+                if len(tokens) > 28:
+                    continue
+                if " " not in word:
+                    tags = pos_tag(tokens, tagset="universal")
+                    for _word, tag in tags:
+                        if _word == word:
+                            examples.append(ExampleModel(position=tag, example=row[0]))
+                            break
+                else:
+                    examples.append(ExampleModel(example=row[0]))
+    return examples

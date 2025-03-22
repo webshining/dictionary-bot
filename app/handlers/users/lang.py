@@ -3,6 +3,7 @@ from aiogram.types import CallbackQuery, Message
 
 from app.keyboards import LangKeyboard
 from loader import _
+
 from ..routes import user_router as router
 
 

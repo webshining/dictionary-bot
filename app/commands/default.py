@@ -5,7 +5,6 @@ from loader import _, bot, i18n
 
 def get_default_commands(lang: str = "en"):
     commands = [
-        BotCommand(command="/add_word", description=_("add word to dictionary", locale=lang)),
         BotCommand(command="/dictionaries", description=_("get dictionaries", locale=lang)),
         BotCommand(command="/lang", description=_("change language", locale=lang)),
         BotCommand(command="/start", description=_("start chat", locale=lang)),

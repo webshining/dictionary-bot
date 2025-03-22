@@ -2,13 +2,13 @@ import asyncio
 
 from aiogram.methods import DeleteWebhook
 
-from app import setup_middlewares, setup_routes
+from app import set_default_commands, setup_middlewares, setup_routes
 from loader import bot, dp
 from utils import logger
 
 
 async def on_startup() -> None:
-    # await set_default_commands()
+    await set_default_commands()
     logger.info("Bot started!")
 
 
