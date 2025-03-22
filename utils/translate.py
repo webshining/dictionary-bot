@@ -52,21 +52,39 @@ async def translate_word(word: str, target: str = "ru", voice: bool = False) -> 
         return Translation(voice=bytes_voice, translations=[translate.text], examples=examples, expressions=[])
 
 
+import sqlite3
+
+conn = sqlite3.connect("sentences.sqlite3")
+
+
 async def get_examples(word: str) -> list[ExampleModel]:
     examples = []
-    query_word = f'"{word.strip()}"'
+    query_word = f'"{word.strip()}"'  # Убираем лишние пробелы вокруг слова
     async with aiosqlite.connect(DIR.joinpath("sentences.sqlite3")) as db:
-        async with db.execute("SELECT content FROM sentences WHERE content MATCH ? LIMIT 20", (query_word,)) as cursor:
-            async for row in cursor:
-                tokens = word_tokenize(row[0])
-                if len(tokens) > 28:
-                    continue
+        async with db.execute(
+            """
+            SELECT full_content FROM sentences WHERE full_content MATCH ? 
+            UNION ALL
+            SELECT part_1 FROM sentences WHERE part_1 MATCH ? 
+            UNION ALL
+            SELECT part_2 FROM sentences WHERE part_2 MATCH ? 
+            LIMIT 100
+            """,
+            (query_word, query_word, query_word),
+        ) as cursor:
+            sentences = [c[0] async for c in cursor]
+            smallest_sentences = sorted(sentences, key=len)[:5]
+            for sentence in smallest_sentences:
                 if " " not in word:
+                    tokens = word_tokenize(sentence)
                     tags = pos_tag(tokens, tagset="universal")
                     for _word, tag in tags:
                         if _word == word:
-                            examples.append(ExampleModel(position=tag, example=row[0]))
+                            examples.append(
+                                ExampleModel(example=sentence.replace(word, f"<code>{word}</code>"), position=tag)
+                            )
                             break
                 else:
-                    examples.append(ExampleModel(example=row[0]))
+                    examples.append(ExampleModel(example=sentence.replace(word, f"<code>{word}</code>")))
+
     return examples
