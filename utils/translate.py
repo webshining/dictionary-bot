@@ -1,18 +1,23 @@
+import sqlite3
 from io import BytesIO
 
 import aiosqlite
 import nltk
 from edge_tts import Communicate
-from googletrans import Translator
 from nltk import pos_tag
 from nltk.tokenize import word_tokenize
 from pydantic import BaseModel
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 from data.config import DIR
 
 nltk.download("punkt_tab")
 nltk.download("universal_tagset")
 nltk.download("averaged_perceptron_tagger_eng")
+
+model_name = "Helsinki-NLP/opus-mt-en-ru"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
 
 class ExpressionModel(BaseModel):
@@ -32,27 +37,28 @@ class Translation(BaseModel):
     expressions: list[ExpressionModel] = []
 
 
+def translate(text: str):
+    inputs = tokenizer(text, return_tensors="pt")
+    outputs = model.generate(**inputs)
+    return tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+
 async def translate_word(word: str, target: str = "ru", voice: bool = False) -> Translation:
-    async with Translator() as translator:
-        # translate
-        translate = await translator.translate(word, dest=target)
+    translations = [translate(word)]
 
-        # voice
-        bytes_voice = None
-        if voice:
-            communicate = Communicate(word, "en-GB-RyanNeural")
-            bytes_voice = BytesIO()
-            async for chunk in communicate.stream():
-                if chunk["type"] == "audio":
-                    bytes_voice.write(chunk["data"])
-            bytes_voice.seek(0)
-            bytes_voice = bytes_voice.getvalue()
+    bytes_voice = None
+    if voice:
+        communicate = Communicate(word, "en-GB-RyanNeural")
+        bytes_voice = BytesIO()
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                bytes_voice.write(chunk["data"])
+        bytes_voice.seek(0)
+        bytes_voice = bytes_voice.getvalue()
 
-        examples = await get_examples(word)
-        return Translation(voice=bytes_voice, translations=[translate.text], examples=examples, expressions=[])
+    examples = await get_examples(word)
+    return Translation(voice=bytes_voice, translations=translations, examples=examples, expressions=[])
 
-
-import sqlite3
 
 conn = sqlite3.connect("sentences.sqlite3")
 
