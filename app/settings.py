@@ -16,13 +16,16 @@ DEBUG = env.bool("DEBUG", default=True)
 ALLOWED_HOSTS = [
     "localhost",
     "http://localhost:3000",
+    "calm-composed-gobbler.ngrok-free.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://calm-composed-gobbler.ngrok-free.app",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
+    "https://calm-composed-gobbler.ngrok-free.app",
 ]
 
 # Application definition
