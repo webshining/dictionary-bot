@@ -1,34 +1,21 @@
-FROM python:3.11-slim AS builder
+FROM python:3.13-slim as builder
 
 WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc
+RUN pip install uv
 
-RUN pip install virtualenv
+COPY pyproject.toml .
 
-RUN virtualenv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+RUN uv sync
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-FROM python:3.11-slim
-
-COPY --from=builder /opt/venv /opt/venv
+FROM python:3.13-slim
 
 WORKDIR /app
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc
-
+COPY --from=builder /app/.venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-COPY .. .
-
-RUN chmod +x ./bin/entrypoint.sh
-
-ENTRYPOINT ["./bin/entrypoint.sh"]
+COPY . .

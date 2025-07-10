@@ -1,2 +1,1 @@
-from .logging import logger
-from .translate import translate_word
+from .logger import logger

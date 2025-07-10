@@ -4,3 +4,6 @@
 .venv
 *.sqlite3
 **/logs
+*.lock
+*.db
+*.json
