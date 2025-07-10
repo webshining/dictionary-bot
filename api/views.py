@@ -1,4 +1,5 @@
 from aiogram.utils.web_app import check_webapp_signature, safe_parse_webapp_init_data
+from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.contrib.auth import alogin
 from django.forms.models import model_to_dict
@@ -41,7 +42,11 @@ async def init_handler(request: HttpRequest, body: InitRequest):
 # GET dictionaries
 @router.get("/dictionaries", auth=django_auth)
 async def dictionaries_handler(request: HttpRequest):
-    return JsonResponse({"dictionaries": []})
+    dictionaries = await sync_to_async(list)(request.user.dictionaries.prefetch_related("words").all())
+    for i, dictionary in enumerate(dictionaries):
+        dictionaries[i] = model_to_dict(dictionary)
+        dictionaries[i]['words'] = [model_to_dict(w) for w in dictionary.words.all()]
+    return JsonResponse({"dictionaries": dictionaries})
 
 
 # GET dictionary by id

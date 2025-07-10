@@ -1,6 +1,7 @@
 from aiogram.filters.callback_data import CallbackData
 from aiogram.types import InlineKeyboardButton, WebAppInfo
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from django.conf import settings
 
 
 class DictionaryKeyboard(CallbackData, prefix="dictionary"):
@@ -13,7 +14,7 @@ class DictionaryKeyboard(CallbackData, prefix="dictionary"):
         buttons = [
             InlineKeyboardButton(
                 text="View",
-                web_app=WebAppInfo(url=f"https://calm-composed-gobbler.ngrok-free.app/webapp/dictionary/{id}/init"),
+                web_app=WebAppInfo(url=f"{settings.FRONTEND_URL}/dictionaries/{id}"),
             ),
         ]
         builder.add(*buttons)

@@ -17,15 +17,18 @@ ALLOWED_HOSTS = [
     "localhost",
     "http://localhost:3000",
     "calm-composed-gobbler.ngrok-free.app",
+    "dictionary-web-app-wheat-sigma.vercel.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://calm-composed-gobbler.ngrok-free.app",
+    "https://dictionary-web-app-wheat-sigma.vercel.app"
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "https://calm-composed-gobbler.ngrok-free.app",
+    "https://dictionary-web-app-wheat-sigma.vercel.app"
 ]
 CSRF_COOKIE_SAMESITE = 'None'
 CSRF_COOKIE_SECURE = True
@@ -139,3 +142,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Telegram
 TELEGRAM_BOT_TOKEN = env.str("TELEGRAM_BOT_TOKEN")
 GOOGLE_AI_API_KEY = env.str("GOOGLE_AI_API_KEY")
+FRONTEND_URL = env.str("FRONTEND_URL")
