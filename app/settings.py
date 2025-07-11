@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import dj_database_url
+from corsheaders.defaults import default_headers
 from environs import env
 
 env.read_env()
@@ -13,27 +14,30 @@ SECRET_KEY = "django-insecure-)#sz6y4#0jq#xjjxxo3&57&hp#vwf#fwb5vs)l&*%2n&!$4yk^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=True)
 
+# hosts
 ALLOWED_HOSTS = [
     "localhost",
-    "http://localhost:3000",
     "calm-composed-gobbler.ngrok-free.app",
-    "dictionary-web-app-wheat-sigma.vercel.app",
+    "dictionary-web-app-wheat-sigma.vercel.app"
 ]
+
+# cookies
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = True
+
+# cors
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://calm-composed-gobbler.ngrok-free.app",
     "https://dictionary-web-app-wheat-sigma.vercel.app"
 ]
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-    "https://calm-composed-gobbler.ngrok-free.app",
-    "https://dictionary-web-app-wheat-sigma.vercel.app"
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "x-csrftoken",
+    "ngrok-skip-browser-warning",
 ]
-CSRF_COOKIE_SAMESITE = 'None'
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SECURE = True
+CORS_ALLOW_METHODS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -59,7 +63,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
