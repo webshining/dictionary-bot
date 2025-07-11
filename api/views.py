@@ -58,6 +58,18 @@ async def dictionary_handler(request: HttpRequest, id: int):
     return JsonResponse({"dictionary": dict_data})
 
 
+# GET word from dictionary
+@router.get("/dictionaries/{id}/words", auth=django_auth)
+async def words_handler(request: HttpRequest, id: int):
+    dictionary = await request.user.dictionaries.prefetch_related("words").aget(id=id)
+
+    words = list(dictionary.words.all())
+    for i, word in enumerate(words):
+        words[i] = model_to_dict(word)
+
+    return JsonResponse({"words": words})
+
+
 # CREATE word in dictionary
 @router.post("/dictionaries/{id}/words", auth=django_auth)
 async def word_create_handler(request: HttpRequest, id: int, body: WordRequest):
@@ -71,13 +83,15 @@ async def word_create_handler(request: HttpRequest, id: int, body: WordRequest):
     if lang is not dictionary.target_lang:
         target_word = await translate(target_word, dictionary.target_lang)
 
-    await dictionary.words.acreate(word=source_word, translate=target_word)
+    await dictionary.words.acreate(word=source_word[0], translation=target_word[0])
 
 
 # DELETE word from dictionary
 @router.delete("/dictionaries/{dictionary_id}/words/{word_id}", auth=django_auth)
 async def word_delete_handler(request: HttpRequest, dictionary_id: int, word_id: int):
-    pass
+    dictionary = await request.user.dictionaries.aget(id=dictionary_id)
+    await (await dictionary.words.aget(id=word_id)).adelete()
+    return JsonResponse({"message": "Success"})
 
 
 # CREATE dictionary

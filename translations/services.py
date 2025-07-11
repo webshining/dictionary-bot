@@ -23,5 +23,4 @@ async def translate(word: str | list[str], target_lang: str) -> list[str]:
 async def detect_language(word: str) -> str:
     client = tr.TranslationServiceAsyncClient(credentials=credentials)
     response = await client.detect_language(content=word, parent=parent, mime_type="text/plain")
-    print(response.languages)
     return response.languages[0].language_code

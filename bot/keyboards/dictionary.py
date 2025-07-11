@@ -13,6 +13,10 @@ class DictionaryKeyboard(CallbackData, prefix="dictionary"):
         builder = InlineKeyboardBuilder()
         buttons = [
             InlineKeyboardButton(
+                text="Cards",
+                web_app=WebAppInfo(url=f"{settings.FRONTEND_URL}/cards/{id}"),
+            ),
+            InlineKeyboardButton(
                 text="View",
                 web_app=WebAppInfo(url=f"{settings.FRONTEND_URL}/dictionaries/{id}"),
             ),
