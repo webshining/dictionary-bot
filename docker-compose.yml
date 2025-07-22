@@ -1,35 +1,45 @@
 x-django: &django
-    build: .
-    environment:
-        DEBUG: False
-        DATABASE_URL: postgres://admin_user:admin_pass@postgres:5432/brain
-    volumes:
-        - static_volume:/app/staticfiles
-    networks:
-        - app
-        - storage
+  build: .
+  environment:
+    DEBUG: False
+    DATABASE_URL: postgres://admin_user:admin_pass@postgres:5432/dictionary
+  volumes:
+    - static_volume:/app/staticfiles
+  networks:
+    - app
+    - storage
 
 services:
-    migrate:
-        <<: *django
-        command: sh -c "python manage.py migrate --noinput && python manage.py collectstatic --clear --noinput"
-        restart: no
+  migrate:
+    <<: *django
+    command: sh -c "python manage.py migrate --noinput && python manage.py collectstatic --clear --noinput"
+    restart: no
 
-    bot:
-        <<: *django
-        restart: always
-        command: sh -c "python /app/manage.py start_bot"
-    admin:
-        <<: *django
-        restart: always
-        command: sh -c "python -m gunicorn app.wsgi --bind 0.0.0.0:4000"
-        ports:
-            - "4000:4000"
+  bot:
+    <<: *django
+    restart: always
+    command: sh -c "python /app/manage.py start_bot"
+  admin:
+    <<: *django
+    restart: always
+    command: sh -c "python -m gunicorn app.asgi:application --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:4000"
+  pinggy:
+    image: pinggy/pinggy
+    restart: no
+    command: >
+      -p 443
+      -R0:admin:4000
+      g5HJmQqpFT7@pro.pinggy.io
+    stdin_open: true
+    tty: true
+    networks:
+      - app
+
 
 volumes:
-    static_volume:
+  static_volume:
 
 networks:
-    app:
-    storage:
-        external: true
+  app:
+  storage:
+    external: true

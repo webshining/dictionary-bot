@@ -7,12 +7,15 @@ class LangKeyboard(CallbackData, prefix="lang"):
     lang: str
 
     @staticmethod
-    def keyboard():
+    def keyboard(selected: str):
         builder = InlineKeyboardBuilder()
 
         for code, lang in settings.LANGUAGES:
+            text = lang
+            if code == selected:
+                text += "*"
             builder.button(
-                text=lang,
+                text=text,
                 callback_data=LangKeyboard(lang=code).pack(),
             )
         builder.adjust(3)

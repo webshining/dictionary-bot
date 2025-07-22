@@ -3,6 +3,8 @@ from aiogram.types import InlineKeyboardButton, WebAppInfo
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from django.conf import settings
 
+from bot.text import Text
+
 
 class DictionaryKeyboard(CallbackData, prefix="dictionary"):
     id: int
@@ -13,11 +15,7 @@ class DictionaryKeyboard(CallbackData, prefix="dictionary"):
         builder = InlineKeyboardBuilder()
         buttons = [
             InlineKeyboardButton(
-                text="Cards",
-                web_app=WebAppInfo(url=f"{settings.FRONTEND_URL}/cards/{id}"),
-            ),
-            InlineKeyboardButton(
-                text="View",
+                text=str(Text.VIEW_BUTTON),
                 web_app=WebAppInfo(url=f"{settings.FRONTEND_URL}/dictionaries/{id}"),
             ),
         ]

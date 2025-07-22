@@ -16,28 +16,45 @@ DEBUG = env.bool("DEBUG", default=True)
 
 # hosts
 ALLOWED_HOSTS = [
+    "admin",
     "localhost",
-    "calm-composed-gobbler.ngrok-free.app",
-    "dictionary-web-app-wheat-sigma.vercel.app"
+    "webshining.space",
+    "api.webshining.space",
 ]
 
-# cookies
+#
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_DOMAIN = '.webshining.space'
+
 SESSION_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_DOMAIN = '.webshining.space'
 
 # cors
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://calm-composed-gobbler.ngrok-free.app",
-    "https://dictionary-web-app-wheat-sigma.vercel.app"
+    "https://webshining.space",
+    "https://api.webshining.space",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "https://webshining.space",
+    "https://api.webshining.space",
 ]
 CORS_ALLOW_HEADERS = list(default_headers) + [
-    "x-csrftoken",
-    "ngrok-skip-browser-warning",
+    "x-csrftoken"
 ]
-CORS_ALLOW_METHODS = ['*']
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -63,7 +80,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    # "django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",

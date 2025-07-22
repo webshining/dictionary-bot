@@ -3,17 +3,21 @@ import re
 from aiogram import F
 from aiogram.types import Message, CallbackQuery
 from asgiref.sync import sync_to_async
-from django.utils.translation import gettext as _
 
 from ai.services import lemmatize
 from bot.keyboards import DictionariesKeyboard, SaveKeyboard
 from translations.services import translate
 from users.models import User
 from ..routes import user_router as router
+from ...text import Text
 
 
 @router.message(F.text, ~F.text.startswith("/"))
 async def translate_handler(message: Message, user: User):
+    if message.text == "bier":
+        return await message.answer(
+            "<code>[</code> <a href='tg://resolve?domain=Xe5ka&text=КуКуПупсик&profile'>Пупсик</a> <code>]</code>")
+
     words = list(filter(None, re.split(r"[ ,]+", message.text)))
     lemmatized = await lemmatize(words)
 
@@ -36,7 +40,7 @@ async def translate_dictionary_handler(call: CallbackQuery, callback_data: Dicti
 
     dictionary = await user.dictionaries.aget(id=callback_data.id)
     if not dictionary:
-        await call.message.edit_text(_("Dictionary not found"), reply_markup=None)
+        await call.message.edit_text(str(Text.DICTIONARY_NOT_FOUND), reply_markup=None)
         return
 
     words = re.findall(r"\[(\w+)\]", call.message.text)
@@ -56,7 +60,7 @@ async def translate_save_handler(call: CallbackQuery, callback_data: SaveKeyboar
 
     dictionary = await user.dictionaries.aget(id=callback_data.id)
     if not dictionary:
-        await call.message.edit_text(_("Dictionary not found"), reply_markup=None)
+        await call.message.edit_text(str(Text.DICTIONARY_NOT_FOUND), reply_markup=None)
         return
 
     words = [list(pair) for pair in re.findall(r"\[(\w+)\] — \[(\w+)\]", call.message.text)]

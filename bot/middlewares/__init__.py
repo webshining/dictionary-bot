@@ -1,7 +1,6 @@
 from aiogram import Dispatcher
 
 from bot.handlers import admin_router
-
 from .admins import middlewares as admins_middlewares
 from .users import middlewares as users_middlewares
 
