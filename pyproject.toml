@@ -13,6 +13,7 @@ dependencies = [
     "django-cors-headers>=4.7.0",
     "django-jazzmin>=3.0.1",
     "django-ninja>=1.4.3",
+    "djangorestframework>=3.16.1",
     "environs>=14.2.0",
     "google-cloud-translate>=3.21.1",
     "google-genai>=1.23.0",

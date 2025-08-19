@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 class Text(Enum):
     DICTIONARIES_BUTTON = _("🔤 Dictionaries")
+    CREATE_DICTIONARY_BUTTON = _("Create dictionary")
     SELECT_DICTIONARY = _("Select dictionary:")
     DICTIONARY_NOT_FOUND = _("Dictionary not found")
 

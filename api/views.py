@@ -8,14 +8,10 @@ from ninja import Router
 from ninja.security import django_auth
 from pydantic import BaseModel
 
-from translations.services import translate, detect_language
+from translations.services import translate, detect_language, get_supported_languages
 from users.models import User
 
 router = Router()
-
-
-class InitRequest(BaseModel):
-    tgWebAppData: str
 
 
 class DictionaryRequest(BaseModel):
@@ -37,6 +33,13 @@ async def init_handler(request: HttpRequest, body: InitRequest):
         await alogin(request, user)
         return JsonResponse({"message": "Success"})
     return JsonResponse({"message": "Unauthorized"}, status=401)
+
+
+# GET supported languages
+@router.get("/languages", auth=django_auth)
+async def languages_handler(request: HttpRequest):
+    languages = await get_supported_languages()
+    return JsonResponse({"languages": [{"code": l.language_code, "name": l.display_name} for l in languages]})
 
 
 # GET dictionaries

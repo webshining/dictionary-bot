@@ -16,15 +16,19 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
-from ninja import NinjaAPI
+from django.urls import path, include
+from rest_framework import routers
 
-from api.views import router as api_router
+from dictionary.views import DictionaryViewSet
+from translations.views import LanguagesViewSet
+from users.views import UserView
 
-api = NinjaAPI()
-api.add_router("/api/", api_router, tags=["api"])
+router = routers.DefaultRouter()
+router.register(r"dictionaries", DictionaryViewSet, basename="dictionaries")
+router.register(r"languages", LanguagesViewSet, basename="languages")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", api.urls),
+    path("api/init/", UserView.as_view()),
+    path("api/", include(router.urls)),
 ]

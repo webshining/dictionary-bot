@@ -16,33 +16,27 @@ DEBUG = env.bool("DEBUG", default=True)
 
 # hosts
 ALLOWED_HOSTS = [
-    "admin",
-    "localhost",
-    "webshining.space",
-    "api.webshining.space",
+    "127.0.0.1",
+    "localhost"
 ]
 
 #
 CSRF_COOKIE_SAMESITE = 'None'
 CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_DOMAIN = '.webshining.space'
+# CSRF_COOKIE_DOMAIN = '.webshining.space'
 
 SESSION_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_DOMAIN = '.webshining.space'
+# SESSION_COOKIE_DOMAIN = '.webshining.space'
 
 # cors
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://webshining.space",
-    "https://api.webshining.space",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
-    "https://webshining.space",
-    "https://api.webshining.space",
 ]
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "x-csrftoken"
@@ -66,13 +60,24 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "users",
     "bot",
     "ai",
     "dictionary",
-    "api",
     "translations",
+
+    "rest_framework",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+}
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",

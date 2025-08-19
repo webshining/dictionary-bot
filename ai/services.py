@@ -20,7 +20,7 @@ async def lemmatize(words: str | list[str]) -> list[str]:
 
 
 async def word_data(word: str) -> TranslateResponse:
-    prompt = "Find up to 3 synonyms and make up to 3 sentences with a word wrapped in <u></u>."
+    prompt = "Find up to 3 synonyms and make up to 3 sentences with a word and wrapp this word in <u></u>."
     response = await client.aio.models.generate_content(
         model="gemini-1.5-flash",
         contents=[prompt, word],
