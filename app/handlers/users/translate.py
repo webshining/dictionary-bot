@@ -5,8 +5,10 @@ from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.models import Translation, User, Word
+from loader import _
 
 from ..routes import user_router as router
+from .languages import _languages
 
 
 @router.message(~F.text.startswith("/"))
@@ -14,6 +16,10 @@ async def translate(message: Message, bot: Bot, user: User, session: AsyncSessio
     text = message.text.lower()
     await user.awaitable_attrs.languages
     await user.awaitable_attrs.words
+
+    if not user.languages:
+        await message.answer(_("You haven't added any languages to translate into yet."))
+        return await _languages(message, user, session)
 
     word = Word()
     translations = []
