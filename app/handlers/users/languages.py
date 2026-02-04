@@ -24,7 +24,7 @@ async def _languages(message: Message, user: User, session: AsyncSession):
 async def _languages_callback(call: CallbackQuery, callback_data: LangKeyboard, user: User, session: AsyncSession):
     await user.awaitable_attrs.languages
 
-    language = await Language.get(callback_data.lang, session=session)
+    language = await Language.get(int(callback_data.lang), session=session)
     if language in user.languages:
         user.languages.remove(language)
     else:
