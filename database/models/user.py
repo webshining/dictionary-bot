@@ -43,7 +43,7 @@ class Translation(BaseModel):
     translation: Mapped[str] = mapped_column(String, nullable=False)
 
     word_id: Mapped[int] = mapped_column(ForeignKey("user_words.id"))
-    word: Mapped["Word"] = relationship(back_populates="translations")
+    word: Mapped["Word"] = relationship(back_populates="translations", lazy="select")
 
     language_id: Mapped[int] = mapped_column(ForeignKey("languages.id"))
     language: Mapped["Language"] = relationship(lazy="joined")

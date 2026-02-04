@@ -16,11 +16,13 @@ async def translate(message: Message, bot: Bot, user: User, session: AsyncSessio
     await user.awaitable_attrs.words
 
     word = Word()
+    translations = []
     for language in user.languages:
         translation = (await bot.translator.translate(text, language.name)).lower()
+        translations.append({"translation": translation, "language": language.name})
         word.translations.append(Translation(translation=translation, language=language))
 
     user.words.append(word)
     await session.commit()
 
-    await message.answer(f'<pre language="json">{json.dumps(word.to_dict(), indent=4, ensure_ascii=False)}</pre>')
+    await message.answer(f'<pre language="json">{json.dumps(translations, indent=4, ensure_ascii=False)}</pre>')
