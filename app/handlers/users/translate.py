@@ -22,7 +22,8 @@ async def translate(message: Message, bot: Bot, user: User, session: AsyncSessio
         translations.append({"translation": translation, "language": language.name})
         word.translations.append(Translation(translation=translation, language=language))
 
-    user.words.append(word)
-    await session.commit()
+    if translations:
+        user.words.append(word)
+        await session.commit()
 
     await message.answer(f'<pre language="json">{json.dumps(translations, indent=4, ensure_ascii=False)}</pre>')
