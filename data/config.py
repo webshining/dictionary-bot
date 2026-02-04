@@ -6,6 +6,7 @@ env = Env()
 env.read_env()
 
 DIR = Path(__file__).absolute().parent.parent
+DEV = env.bool("DEV", default=True)
 
 TELEGRAM_BOT_TOKEN = env.str("TELEGRAM_BOT_TOKEN")
 WEBHOOK_URL = env.str("WEBHOOK_URL", default=None)
@@ -28,3 +29,6 @@ if DB_HOST and DB_PORT and DB_USER and DB_PASS and DB_NAME:
 
 I18N_PATH = f"{DIR}/data/locales"
 I18N_DOMAIN = "bot"
+
+SERVER_HOST = env.str("SERVER_HOST", default="localhost")
+SERVER_PORT = env.int("SERVER_PORT", default=4000)
