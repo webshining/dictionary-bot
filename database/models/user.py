@@ -55,7 +55,9 @@ class Session(BaseModel):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     query_id: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     key: Mapped[str] = mapped_column(String, nullable=False, unique=True)
-    expired_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc) + timedelta(hours=3))
+    expired_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc) + timedelta(hours=3)
+    )
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     user: Mapped["User"] = relationship(back_populates="sessions", lazy="select")
