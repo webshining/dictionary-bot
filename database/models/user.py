@@ -56,8 +56,14 @@ class Session(BaseModel):
     query_id: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     key: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     expired_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc) + timedelta(hours=3)
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc) + timedelta(minutes=30)
     )
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     user: Mapped["User"] = relationship(back_populates="sessions", lazy="select")
+
+    def refresh(self):
+        self.expired_at = datetime.now(timezone.utc) + timedelta(minutes=30)
+
+    def revoke(self):
+        self.expired_at = datetime.now(timezone.utc)

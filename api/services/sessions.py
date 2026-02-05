@@ -3,11 +3,9 @@ import hashlib
 import os
 
 
-def generate_session_keys():
+def generate_session_id():
     api_key = base64.urlsafe_b64encode(os.urandom(32)).rstrip(b"=").decode()
-    hashed_api_key = hash_key(api_key.encode())
-
-    return api_key, hashed_api_key
+    return api_key
 
 
 def hash_key(key: bytes):
