@@ -10,8 +10,6 @@ class Request(BaseModel):
 class Response(BaseModel):
     id: int
     name: str
-    username: str
+    username: str | None
     lang: str
     languages: list[LanguageResponse]
-
-
