@@ -56,7 +56,7 @@ class Session(BaseModel):
     query_id: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     key: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     expired_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc) + timedelta(minutes=30)
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc) + timedelta(hours=1)
     )
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
