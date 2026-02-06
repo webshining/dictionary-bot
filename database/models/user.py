@@ -33,7 +33,7 @@ class Word(BaseModel):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     user: Mapped["User"] = relationship(back_populates="words")
 
-    translations: Mapped[list["Translation"]] = relationship(back_populates="word", lazy="joined")
+    translations: Mapped[list["Translation"]] = relationship(back_populates="word", lazy="joined", cascade="all, delete-orphan")
 
 
 class Translation(BaseModel):

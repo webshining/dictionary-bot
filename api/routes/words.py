@@ -17,7 +17,7 @@ async def _words(current_user: User = Depends(current_user)):
 
 @router.delete("/{id}")
 async def _word_delete(id: int, current_user: User = Depends(current_user), session: AsyncSession = Depends(get_session_generator)):
-    word = await Word.get_by(Word.user_id == current_user.id, Word.id == id, session=session)
-    if word:
+    if word := await Word.get_by(Word.user_id == current_user.id, Word.id == id, session=session):
         await session.delete(word)
+        await session.commit()
     return "ok"
