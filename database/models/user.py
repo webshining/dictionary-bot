@@ -53,7 +53,7 @@ class Session(BaseModel):
     __tablename__ = "user_sessions"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    query_id: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+    subject: Mapped[str] = mapped_column(String, nullable=True)
     key: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     expired_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc) + timedelta(hours=1)

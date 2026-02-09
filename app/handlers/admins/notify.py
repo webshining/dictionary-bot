@@ -9,7 +9,7 @@ from app.keyboards import ApplyKeyboard
 from app.states import NotifyState
 from database.models import User
 from loader import _
-from utils import logger
+from loguru import logger
 
 from ..routes import admin_router as router
 

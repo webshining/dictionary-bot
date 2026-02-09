@@ -13,7 +13,7 @@ from data.config import (
 )
 from loader import bot, dp
 from translator import GoogleTranslator
-from utils import logger
+from loguru import logger
 
 
 async def on_startup() -> None:

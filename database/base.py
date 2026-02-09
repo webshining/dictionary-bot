@@ -1,14 +1,14 @@
 from contextlib import asynccontextmanager
 from datetime import datetime
 
-from sqlalchemy import and_, select
+from sqlalchemy import and_, create_engine, select
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
-from sqlalchemy.orm import DeclarativeBase, class_mapper
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 from data.config import DB_URI
 
@@ -24,6 +24,15 @@ async def get_session():
 
 async def get_session_generator():
     async with async_session() as session:
+        yield session
+
+
+sync_engine = create_engine(DB_URI)
+sync_session = sessionmaker(async_engine, expire_on_commit=False)
+
+
+def get_session_sync():
+    with sync_session() as session:
         yield session
 
 

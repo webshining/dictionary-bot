@@ -21,26 +21,17 @@ async def _init(request: Request, response: Response, body: InitRequest = None, 
 
     try:
         data = safe_parse_webapp_init_data(bot.token, init_data=body.init_data)
-        if not data.query_id:
-            logger.info(f"[user_id]: {data.user.id} [query_id]: {data.query_id} — no_query_id")
-            raise HTTPException(400, "invalid_request")
     except Exception:
         raise HTTPException(400, "invalid_request")
 
-    user_session = await Session.get_by(Session.query_id == data.query_id)
-    if user_session:
-        logger.info(f"[user_id]: {(await user_session.awaitable_attrs.user).id} [query_id]: {data.query_id} — already_authorized")
-        return "ok"
-
     user = await User.get(data.user.id, session=session)
     if not user:
-        logger.info(f"[user_id]: {data.user.id} [query_id]: {data.query_id} — user_not_exist")
         raise HTTPException(400, "invalid_request")
 
     session_id = generate_session_id()
-    user_session = await Session.create(query_id=data.query_id, key=hash_key(session_id.encode()), user_id=user.id, session=session)
+    await Session.create(key=hash_key(session_id.encode()), user_id=user.id, session=session)
     await session.commit()
-    logger.info(f"[user_id]: {user.id} [query_id]: {data.query_id} — authorized")
+    logger.info(f"[user_id]: {user.id} — authorized")
 
     response.set_cookie("session_id", session_id, samesite="none", secure=True, httponly=True)
     return "ok"
