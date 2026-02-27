@@ -1,5 +1,3 @@
-import logging
-
 from aiogram.utils.web_app import safe_parse_webapp_init_data
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from sqlalchemy.ext.asyncio import AsyncSession

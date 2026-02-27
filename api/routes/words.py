@@ -12,7 +12,7 @@ router = APIRouter(prefix="/words", dependencies=[Depends(get_session_generator)
 @router.get("", response_model=list[WordResponse])
 async def _words(current_user: User = Depends(current_user)):
     await current_user.awaitable_attrs.words
-    return [w.to_dict() for w in current_user.words]
+    return sorted([w.to_dict() for w in current_user.words], key=lambda w: w["id"])
 
 
 @router.delete("/{id}")
