@@ -1,28 +1,37 @@
-from datetime import datetime, timezone
-from typing import Annotated
-
-from fastapi import Cookie, Depends, HTTPException
+import jwt
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.services.sessions import hash_key
+from data.config import TELEGRAM_BOT_TOKEN
 from database import get_session_generator
-from database.models import Session
+from database.models import User
+
+security = HTTPBearer()
 
 
-async def get_current_user(session: AsyncSession = Depends(get_session_generator), session_id: Annotated[str | None, Cookie()] = None):
-    if not session_id:
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    session: AsyncSession = Depends(get_session_generator),
+):
+    if not credentials.credentials:
         return None
 
-    key = hash_key(session_id.encode())
-    user_session = await Session.get_by(Session.key == key, Session.expired_at > datetime.now(timezone.utc), session=session)
-    if not user_session:
+    try:
+        claims = jwt.decode(credentials.credentials, TELEGRAM_BOT_TOKEN, ["HS256"], verify=True)
+    except:
         return None
 
-    return await user_session.awaitable_attrs.user
+    user = await User.get_by(User.id == claims["userId"], session=session)
+
+    return user
 
 
-async def current_user(session: AsyncSession = Depends(get_session_generator), session_id: Annotated[str | None, Cookie()] = None):
-    current_user = await get_current_user(session, session_id)
+async def current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    session: AsyncSession = Depends(get_session_generator),
+):
+    current_user = await get_current_user(credentials, session)
     if not current_user:
         raise HTTPException(401, "unauthorized")
 

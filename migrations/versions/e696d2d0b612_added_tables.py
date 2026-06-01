@@ -1,8 +1,8 @@
 """Added tables
 
-Revision ID: da0b8e6d301c
+Revision ID: e696d2d0b612
 Revises: 
-Create Date: 2026-02-08 03:53:00.292992
+Create Date: 2026-03-30 17:12:19.886194
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'da0b8e6d301c'
+revision: str = 'e696d2d0b612'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -23,22 +23,6 @@ def upgrade() -> None:
     op.create_table('languages',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('tasks_cron',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('name', sa.String(), nullable=False),
-    sa.Column('minute', sa.String(), nullable=False),
-    sa.Column('hour', sa.String(), nullable=False),
-    sa.Column('day_of_week', sa.String(), nullable=False),
-    sa.Column('day_of_month', sa.String(), nullable=False),
-    sa.Column('month_of_year', sa.String(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('tasks_periodic',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('name', sa.String(), nullable=False),
-    sa.Column('run_every', sa.Float(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
@@ -57,14 +41,13 @@ def upgrade() -> None:
     )
     op.create_table('user_sessions',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('query_id', sa.String(), nullable=False),
+    sa.Column('subject', sa.String(), nullable=True),
     sa.Column('key', sa.String(), nullable=False),
     sa.Column('expired_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('user_id', sa.BigInteger(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('key'),
-    sa.UniqueConstraint('query_id')
+    sa.UniqueConstraint('key')
     )
     op.create_table('user_words',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
@@ -73,13 +56,12 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user_word_translations',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('translation', sa.String(), nullable=False),
     sa.Column('word_id', sa.Integer(), nullable=False),
     sa.Column('language_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['language_id'], ['languages.id'], ),
     sa.ForeignKeyConstraint(['word_id'], ['user_words.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('word_id', 'language_id')
     )
     # ### end Alembic commands ###
 
@@ -91,7 +73,5 @@ def downgrade() -> None:
     op.drop_table('user_sessions')
     op.drop_table('user_language')
     op.drop_table('users')
-    op.drop_table('tasks_periodic')
-    op.drop_table('tasks_cron')
     op.drop_table('languages')
     # ### end Alembic commands ###

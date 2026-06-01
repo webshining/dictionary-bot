@@ -11,7 +11,7 @@ from ..routes import user_router as router
 from .languages import _languages
 
 
-@router.message(~F.text.startswith("/"))
+@router.message(F.text, ~F.text.startswith("/"))
 async def translate(message: Message, bot: Bot, user: User, session: AsyncSession):
     text = message.text.lower()
     await user.awaitable_attrs.languages

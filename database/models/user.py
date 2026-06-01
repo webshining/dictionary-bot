@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..base import BaseModel
 from .language import Language
+from .word import Word
 
 user_language = Table(
     "user_language", BaseModel.metadata, Column("user_id", ForeignKey("users.id")), Column("language_id", ForeignKey("languages.id"))
@@ -21,32 +22,8 @@ class User(BaseModel):
     lang: Mapped[str] = mapped_column(String, default="en")
 
     languages: Mapped[list["Language"]] = relationship(secondary=user_language, lazy="select")
-    words: Mapped[list["Word"]] = relationship(back_populates="user", lazy="select")
+    words: Mapped[list[Word]] = relationship(lazy="select")
     sessions: Mapped[list["Session"]] = relationship(back_populates="user", lazy="select")
-
-
-class Word(BaseModel):
-    __tablename__ = "user_words"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    user: Mapped["User"] = relationship(back_populates="words")
-
-    translations: Mapped[list["Translation"]] = relationship(back_populates="word", lazy="joined", cascade="all, delete-orphan")
-
-
-class Translation(BaseModel):
-    __tablename__ = "user_word_translations"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    translation: Mapped[str] = mapped_column(String, nullable=False)
-
-    word_id: Mapped[int] = mapped_column(ForeignKey("user_words.id"))
-    word: Mapped["Word"] = relationship(back_populates="translations", lazy="select")
-
-    language_id: Mapped[int] = mapped_column(ForeignKey("languages.id"))
-    language: Mapped["Language"] = relationship(lazy="joined")
 
 
 class Session(BaseModel):

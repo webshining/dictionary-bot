@@ -6,7 +6,6 @@ class Request(BaseModel):
 
 
 class TranslationResponse(BaseModel):
-    id: int
     translation: str
     language: str
 

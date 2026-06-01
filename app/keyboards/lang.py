@@ -12,8 +12,9 @@ class LangKeyboard(CallbackData, prefix="lang"):
 
         for key, lang in languages:
             builder.button(
-                text=f'{lang}{"*" if key in selected else ""}',
+                text=lang,
                 callback_data=LangKeyboard(data=data, lang=key).pack(),
+                style="success" if key in selected else None,
             )
         builder.adjust(3)
 
