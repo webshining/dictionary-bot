@@ -1,6 +1,4 @@
-from datetime import datetime, timedelta, timezone
-
-from sqlalchemy import BigInteger, Column, DateTime, ForeignKey, Integer, String, Table
+from sqlalchemy import BigInteger, Column, ForeignKey, String, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..base import BaseModel
@@ -23,24 +21,3 @@ class User(BaseModel):
 
     languages: Mapped[list["Language"]] = relationship(secondary=user_language, lazy="select")
     words: Mapped[list[Word]] = relationship(lazy="select")
-    sessions: Mapped[list["Session"]] = relationship(back_populates="user", lazy="select")
-
-
-class Session(BaseModel):
-    __tablename__ = "user_sessions"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    subject: Mapped[str] = mapped_column(String, nullable=True)
-    key: Mapped[str] = mapped_column(String, nullable=False, unique=True)
-    expired_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc) + timedelta(hours=1)
-    )
-
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    user: Mapped["User"] = relationship(back_populates="sessions", lazy="select")
-
-    def refresh(self):
-        self.expired_at = datetime.now(timezone.utc) + timedelta(minutes=30)
-
-    def revoke(self):
-        self.expired_at = datetime.now(timezone.utc)

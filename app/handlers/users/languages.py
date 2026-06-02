@@ -16,7 +16,7 @@ async def _languages(message: Message, user: User, session: AsyncSession):
     languages = await Language.get_all(session=session)
     await message.answer(
         _("Select languages for translate:"),
-        reply_markup=LangKeyboard.keyboard("translate", [(l.id, l.name.capitalize()) for l in languages], [l.id for l in user.languages]),
+        reply_markup=LangKeyboard.keyboard("translate", [(l.id, l.display) for l in languages], [l.id for l in user.languages]),
     )
 
 
@@ -35,9 +35,7 @@ async def _languages_callback(call: CallbackQuery, callback_data: LangKeyboard, 
     try:
         await call.message.edit_text(
             _("Select languages for translate:"),
-            reply_markup=LangKeyboard.keyboard(
-                "translate", [(l.id, l.name.capitalize()) for l in languages], [l.id for l in user.languages]
-            ),
+            reply_markup=LangKeyboard.keyboard("translate", [(l.id, l.display) for l in languages], [l.id for l in user.languages]),
         )
     except Exception:
         pass

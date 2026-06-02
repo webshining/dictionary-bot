@@ -1,3 +1,3 @@
 from .language import Language
-from .user import Session, User
+from .user import User
 from .word import Translation, Word

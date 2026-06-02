@@ -1,4 +1,6 @@
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel
+
+from .languages import Response as LanguageResponse
 
 
 class Request(BaseModel):
@@ -7,12 +9,7 @@ class Request(BaseModel):
 
 class TranslationResponse(BaseModel):
     translation: str
-    language: str
-
-    @model_validator(mode="before")
-    def extract_language_name(cls, values):
-        values["language"] = values["language"]["name"]
-        return values
+    language: LanguageResponse
 
 
 class Response(BaseModel):

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from .words import router as words_router
+from .me import router as me_router
 
 router = APIRouter(prefix="/api")
-router.include_router(words_router)
+router.include_router(me_router)
