@@ -5,9 +5,9 @@ from aiogram.client.telegram import PRODUCTION, TEST
 from aiogram.enums import ParseMode
 from aiogram.utils.i18n import I18n
 
-from data.config import I18N_DOMAIN, I18N_PATH, RD_URI, TELEGRAM_BOT_TOKEN
+from data.config import DEV, I18N_DOMAIN, I18N_PATH, RD_URI, TELEGRAM_BOT_TOKEN
 
-session = AiohttpSession(api=TEST)
+session = AiohttpSession(api=TEST if DEV else PRODUCTION)
 bot = Bot(TELEGRAM_BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML, link_preview_is_disabled=True), session=session)
 if RD_URI:
     from aiogram.fsm.storage.redis import RedisStorage
