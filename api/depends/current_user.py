@@ -22,7 +22,7 @@ async def get_current_user(
     except:
         return None
 
-    user = await User.get_by(User.id == claims["userId"], session=session)
+    user = await User.get_by(User.id == int(claims["sub"]), session=session)
 
     return user
 
