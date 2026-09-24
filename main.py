@@ -2,6 +2,7 @@ import asyncio
 
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from aiohttp import web
+from loguru import logger
 
 from app import set_default_commands, setup_middlewares, setup_routes
 from data.config import (
@@ -13,7 +14,6 @@ from data.config import (
 )
 from loader import bot, dp
 from translator import GoogleTranslator
-from loguru import logger
 
 
 async def on_startup() -> None:
@@ -50,7 +50,7 @@ async def main() -> None:
         logger.info("Webhook started!")
         await asyncio.Event().wait()
     else:
-        logger.info("Bot polling started!")
+        logger.info(f"Bot polling started! [{(await bot.me()).username}]")
         await dp.start_polling(bot)
 
 

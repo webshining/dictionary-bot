@@ -9,8 +9,10 @@ class Word(BaseModel):
     __tablename__ = "user_words"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    source: Mapped[str] = mapped_column(String, nullable=False, server_default="")
     translations: Mapped[list["Translation"]] = relationship(back_populates="word", lazy="joined", cascade="all, delete-orphan")
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
 
 class Translation(BaseModel):

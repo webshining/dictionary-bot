@@ -21,7 +21,7 @@ async def translate(message: Message, bot: Bot, user: User, session: AsyncSessio
         await message.answer(_("You haven't added any languages to translate into yet."))
         return await _languages(message, user, session)
 
-    word = Word()
+    word = Word(source=text)
     translations = []
     for language in user.languages:
         translation = (await bot.translator.translate(text, language.value)).lower()

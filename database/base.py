@@ -65,7 +65,8 @@ class BaseModel(Base):
     @execute
     async def get_all(cls, session: AsyncSession = None):
         stmt = select(cls)
-        objs = (await session.scalars(stmt)).all()
+        result = await session.execute(stmt)
+        objs = result.unique().scalars().all()
         return objs
 
     @classmethod
