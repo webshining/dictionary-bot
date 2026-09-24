@@ -96,6 +96,13 @@ class BaseModel(Base):
 
     @classmethod
     @execute
+    async def delete(cls, id: int, session: AsyncSession = None, **kwargs):
+        async with session.begin():
+            await cls.delete(id, session=session)
+            await session.flush()
+
+    @classmethod
+    @execute
     async def get_or_create(cls, id: str | int, session: AsyncSession = None, **kwargs):
         if obj := await cls.get(id, session=session):
             return obj
