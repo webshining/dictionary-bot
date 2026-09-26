@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from .languages import Response as LanguageResponse
 
@@ -14,4 +14,9 @@ class TranslationResponse(BaseModel):
 
 class Response(BaseModel):
     id: int
+    source: str
     translations: list[TranslationResponse]
+
+
+class ReviewRequest(BaseModel):
+    quality: int = Field(ge=0, le=5)
