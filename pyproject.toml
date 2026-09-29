@@ -20,5 +20,6 @@ dependencies = [
     "pytz>=2026.2",
     "redis>=8.0.0",
     "sqlalchemy[asyncio]>=2.0.50",
+    "surrealdb>=2.0.0",
     "uvicorn>=0.48.0",
 ]

@@ -1,21 +1,10 @@
 from pydantic import BaseModel, Field
 
-from .languages import Response as LanguageResponse
-
-
-class Request(BaseModel):
-    init_data: str
-
-
-class TranslationResponse(BaseModel):
-    translation: str
-    language: LanguageResponse
-
 
 class WordResponse(BaseModel):
-    id: int
-    source: str
-    translations: list[TranslationResponse]
+    id: str
+    word: str
+    language: str
 
 
 class ReviewRequest(BaseModel):

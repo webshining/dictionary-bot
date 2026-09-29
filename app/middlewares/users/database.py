@@ -1,5 +1,5 @@
 from aiogram.dispatcher.event.telegram import TelegramEventObserver
-from aiogram.types import Message, CallbackQuery, InlineQuery
+from aiogram.types import CallbackQuery, InlineQuery, Message
 
 from database import get_session
 

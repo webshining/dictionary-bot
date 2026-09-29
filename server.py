@@ -7,13 +7,17 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.routes import router as api_router
 from data.config import DEV, SERVER_HOST, SERVER_PORT
+from surreal.base import database
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger = logging.getLogger("uvicorn")
     app.state.logger = logger
+    app.state.database = database.db
+    await database.connect()
     yield
+    await database.disconnect()
 
 
 app = FastAPI(lifespan=lifespan)

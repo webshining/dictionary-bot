@@ -1,7 +1,7 @@
 from aiogram.dispatcher.event.telegram import TelegramEventObserver
 from aiogram.types import CallbackQuery, InlineQuery, Message
 
-from database.models import User
+from surreal.models import User
 
 
 async def user_middleware(event: TelegramEventObserver):
@@ -11,11 +11,4 @@ async def user_middleware(event: TelegramEventObserver):
         await handler(event, data)
 
     async def process_user(from_user, data):
-        session = data["session"]
-        data["user"] = await User.update_or_create(
-            from_user.id,
-            session=session,
-            name=from_user.full_name,
-            username=from_user.username,
-        )
-        await session.commit()
+        data["user"] = await User.create_or_update(from_user.id, name=from_user.full_name, username=from_user.username)

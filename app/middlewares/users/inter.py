@@ -1,8 +1,8 @@
 from aiogram.dispatcher.event.telegram import TelegramEventObserver
-from aiogram.types import Message, CallbackQuery, InlineQuery
+from aiogram.types import CallbackQuery, InlineQuery, Message
 
-from database.models import User
 from loader import i18n
+from surreal.models import User
 
 
 async def i18n_middleware(event: TelegramEventObserver):

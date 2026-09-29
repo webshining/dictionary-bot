@@ -23,5 +23,11 @@ RD_URI = env.str("RD_URI", default=None)
 
 DB_URI = env.str("DB_URI", default="sqlite+aiosqlite:///database.sqlite3")
 
+SURREAL_URL = env.str("SURREAL_URL")
+SURREAL_USERNAME = env.str("SURREAL_USERNAME")
+SURREAL_PASSWORD = env.str("SURREAL_PASSWORD")
+SURREAL_NAMESPACE = env.str("SURREAL_NAMESPACE")
+SURREAL_DATABASE = env.str("SURREAL_DATABASE")
+
 I18N_PATH = f"{DIR}/data/locales"
 I18N_DOMAIN = "bot"

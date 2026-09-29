@@ -13,19 +13,26 @@ from data.config import (
     WEBHOOK_URL,
 )
 from loader import bot, dp
+from surreal.base import database
 from translator import GoogleTranslator
 
 
 async def on_startup() -> None:
     await set_default_commands()
+
     if all([WEBHOOK_URL, WEBHOOK_PATH, WEBHOOK_SERVER_SECRET]):
         await bot.set_webhook(f"{WEBHOOK_URL}{WEBHOOK_PATH}", secret_token=WEBHOOK_SERVER_SECRET)
     else:
         await bot.delete_webhook(drop_pending_updates=True)
+
     bot.translator = GoogleTranslator("google.credentials.json")
+
+    await database.connect()
+    bot.surreal = database.db
 
 
 async def on_shutdown() -> None:
+    await database.disconnect()
     logger.info("Bot stopped!")
 
 

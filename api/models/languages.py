@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 
-class Response(BaseModel):
-    id: int
+class LanguageResponse(BaseModel):
+    id: str
+    value: str
     display: str
