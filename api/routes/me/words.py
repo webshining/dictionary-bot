@@ -4,8 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.depends import current_user
-from api.models.words import Request as ReviewRequest
-from api.models.words import Response as WordResponse
+from api.models.words import ReviewRequest, WordResponse
 from database import get_session_generator
 from database.models import User, Word
 

@@ -41,7 +41,7 @@ class Word(BaseModel):
         return result.unique().scalars().all()
 
     def review(self, quality: int, now: datetime | None = None) -> None:
-        if quality < 0 or quality > 5:
+        if quality <= 0 or quality > 5:
             raise ValueError("quality must be between 0 and 5")
 
         now = now or datetime.now(UTC)

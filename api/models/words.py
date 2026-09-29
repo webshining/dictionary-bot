@@ -12,7 +12,7 @@ class TranslationResponse(BaseModel):
     language: LanguageResponse
 
 
-class Response(BaseModel):
+class WordResponse(BaseModel):
     id: int
     source: str
     translations: list[TranslationResponse]

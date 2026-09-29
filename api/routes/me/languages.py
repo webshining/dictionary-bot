@@ -2,10 +2,9 @@ from fastapi import APIRouter, Depends
 
 from api.depends import current_user
 from api.models.languages import Response as LanguageResponse
-from database import get_session_generator
 from database.models import User
 
-router = APIRouter(prefix="/languages", dependencies=[Depends(get_session_generator)])
+router = APIRouter(prefix="/languages", dependencies=[])
 
 
 @router.get("", response_model=list[LanguageResponse])
