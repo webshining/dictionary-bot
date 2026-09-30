@@ -46,25 +46,24 @@ class Know(Base):
         if quality <= 0 or quality > 5:
             raise ValueError("quality must be between 0 and 5")
 
-        repetitions = 0
-        lapses = 0
-        interval_days = 0
-
         now = now or datetime.now(UTC)
+
+        ease_factor = max(1.3, self.ease_factor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)))
+
         if quality < 3:
             repetitions = 0
             lapses = self.lapses + 1
             interval_days = 1
         else:
             repetitions = self.repetitions + 1
+            lapses = 0
             if repetitions == 1:
                 interval_days = 1
             elif repetitions == 2:
                 interval_days = 6
             else:
-                interval_days = max(1, round(interval_days * self.ease_factor))
+                interval_days = max(1, round(self.interval_days * ease_factor))
 
-        ease_factor = max(1.3, self.ease_factor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)))
         last_reviewed_at = now
         due_at = now + timedelta(days=interval_days)
 
