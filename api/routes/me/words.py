@@ -1,11 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.depends import current_user
 from api.models.words import ReviewRequest
-from database import get_session_generator
 from surreal.base import current_session
-from surreal.models import Know, User, Word
+from surreal.models import Know, User
 
 router = APIRouter(prefix="/words", dependencies=[])
 
@@ -43,14 +41,9 @@ async def _review_word(
 
 @router.delete("/{id}")
 async def _remove_word(
-    id: int,
+    id: str,
     current_user: User = Depends(current_user),
-    session: AsyncSession = Depends(get_session_generator),
 ):
-    await current_user.awaitable_attrs.words
-
-    word = await Word.get_by(Word.id == id, Word.user_id == current_user.id, session=session)
-    await session.delete(word)
-    await session.commit()
-
+    session = current_session.get()
+    await session.query(f"DELETE know WHERE id = know:{id} AND in = {current_user.id}")
     return "ok"
