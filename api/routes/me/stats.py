@@ -24,7 +24,7 @@ async def _stats(current_user: User = Depends(current_user)):
 
     count = len(user_words)
     reviewed = list(filter(lambda w: w.last_reviewed_at, user_words))
-    avg_streak = sum(word.repetitions for word in reviewed) / len(reviewed) if len(reviewed) > 0 else 0
+    avg_streak = round(sum(word.repetitions for word in reviewed) / len(reviewed) if len(reviewed) > 0 else 0, 1)
 
     now = datetime.now(UTC)
     due_words = list(filter(lambda w: w.due_at is not None and w.due_at <= now, user_words))
