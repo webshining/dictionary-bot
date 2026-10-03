@@ -18,6 +18,8 @@ class Know(Base):
     due_at: datetime | None = Field(default=None)
     last_reviewed_at: datetime | None = Field(default=None)
 
+    user: RecordID = Field(alias="in", exclude=True)
+
     @classmethod
     async def get_study_cards(cls, user_id: RecordID, limit: int):
         session = current_session.get()
@@ -67,6 +69,7 @@ class Know(Base):
         last_reviewed_at = now
         due_at = now + timedelta(days=interval_days)
 
+        await session.query(f"RELATE {self.user} ->review:ulid() ->{self.id}")
         await session.merge(
             self.id,
             {
@@ -100,7 +103,7 @@ class User(Base):
             self.words = [
                 Know.model_validate(w)
                 for w in await session.query(
-                    f"SELECT VALUE array::map(->know, |$know| {{id: $know.id, words: array::union([$know.out.*], $know.out->translation->word.*)}}) FROM ONLY {self.id} FETCH words.language"
+                    f"SELECT *, array::union([out.*], out->translation->word.*) AS words FROM know WHERE in = {self.id} FETCH words.language"
                 )
             ]
 
