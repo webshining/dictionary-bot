@@ -69,7 +69,7 @@ class Know(Base):
         last_reviewed_at = now
         due_at = now + timedelta(days=interval_days)
 
-        await session.query(f"RELATE {self.user} ->review:ulid() ->{self.id}")
+        await session.query(f"RELATE {self.user} ->review:ulid() ->{self.id} SET quality = {quality}")
         await session.merge(
             self.id,
             {
